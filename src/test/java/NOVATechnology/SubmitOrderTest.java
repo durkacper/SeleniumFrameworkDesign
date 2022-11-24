@@ -1,5 +1,7 @@
 package NOVATechnology;
 
+import NOVATechnology.PageObjects.LandingPagePO;
+import NOVATechnology.PageObjects.ProductCataloguePO;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -13,7 +15,7 @@ import org.testng.Assert;
 import java.time.Duration;
 import java.util.List;
 
-public class StandAloneTest {
+public class SubmitOrderTest {
 
     public static void main(String[] args) {
 
@@ -24,65 +26,52 @@ public class StandAloneTest {
         WebDriver driver = new ChromeDriver();
         //global wait
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
-        driver.get("https://rahulshettyacademy.com/client");
+
         //explicit wait
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
         //start with max window
         driver.manage().window().maximize();
 
         //login
-        driver.findElement(By.id("userEmail")).sendKeys("john.brown@mail.com");
-        driver.findElement(By.id("userPassword")).sendKeys("Password123");
-        driver.findElement(By.id("login")).click();
+        LandingPagePO landingPage = new LandingPagePO(driver);
+        landingPage.goTo();
+        landingPage.loginAplication("john.brown@mail.com", "Password123");
 
         //wait until products are loaded
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(".mb-3")));
         //grab all products into list
-        List<WebElement> products = driver.findElements(By.cssSelector(".mb-3"));
+        ProductCataloguePO productCataloguePO = new ProductCataloguePO(driver);
+        List<WebElement> products = productCataloguePO.getProductList();
 
         //iterate on list using Streams and add product to cart
-        WebElement prod = products.stream().filter(product ->
-                product.findElement(By.cssSelector("b")).getText().equals(productName)).findFirst().orElse(null);
-        prod.findElement(By.cssSelector("button.btn.w-10")).click();
-
-        //iterate in classic way and add product to cart
-        /*
-        for (int i = 0; i < products.size(); i++) {
-            String productText = products.get(i).findElement(By.cssSelector("b")).getText();
-            if (productText.equals(productName)) {
-                driver.findElement(By.cssSelector("button.btn.w-10")).click();
-            }
-        }
-         */
-
         //wait until "Product Added to Cart" notification is displayed (temporary notification), then go to Cart
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("#toast-container")));
-
-        //and wait until "loading page animation" disappeared
-        //wait.until(ExpectedConditions.invisibilityOfElementLocated(By.cssSelector(".ng-animating")));
-        //in this case the "invisibilityOf" is quicker than "invisibilityOfElementLocated":
-        wait.until(ExpectedConditions.invisibilityOf(driver.findElement(By.cssSelector(".ng-animating"))));
-
+        //and wait until "loading page animation" disappeared (in this case the "invisibilityOf" is quicker than "invisibilityOfElementLocated")
+        productCataloguePO.addProductToCart(productName);
         //go to the Cart
-        driver.findElement(By.cssSelector("button[routerlink='/dashboard/cart'] i")).click();
+        productCataloguePO.goToCartPage();
 
         //grab all products in Cart into list
         List<WebElement> cartProducts = driver.findElements(By.cssSelector(".cartSection h3"));
 
         //iterate on list in classic way
+        /*
         for (int i = 0; i < cartProducts.size(); i++) {
             String productInCartText = cartProducts.get(i).getText();
             Assert.assertTrue(productInCartText.equals(productName));
         }
-        /*
+         */
+
         //iterate on list using Stream
         boolean match = cartProducts.stream().anyMatch(cartProduct ->
                 cartProduct.getText().equalsIgnoreCase(productName));
         Assert.assertTrue(match);
-         */
+
 
         //go to the Checkout
         driver.findElement(By.cssSelector("li.totalRow button")).click();
+
+
+
+
 
         //Checkout -> select the country using Actions
         Actions actions = new Actions(driver);
