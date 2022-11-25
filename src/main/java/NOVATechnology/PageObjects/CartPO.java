@@ -10,23 +10,27 @@ import java.util.List;
 
 public class CartPO extends AbstractComponent {
 
+    WebDriver driver;
+
     public CartPO(WebDriver driver) {
         super(driver);
         PageFactory.initElements(driver, this);
     }
 
     @FindBy(css = ".cartSection h3")
-    private List<WebElement> productTitles;
+    private List<WebElement> cartProducts;
 
     @FindBy(css = "li.totalRow button")
     WebElement checkoutButton;
 
-    public void goToCheckout(){
+    public CheckoutPO goToCheckout() {
         checkoutButton.click();
+        CheckoutPO checkoutPO = new CheckoutPO(driver);
+        return checkoutPO;
     }
 
-    public boolean verifyProductDisplayed(String productName){
-        Boolean match = productTitles.stream().anyMatch(cartProduct ->
+    public boolean verifyProductDisplayed(String productName) {
+        Boolean match = cartProducts.stream().anyMatch(cartProduct ->
                 cartProduct.getText().equalsIgnoreCase(productName));
         return match;
     }

@@ -1,5 +1,7 @@
 package NOVATechnology.AbstractComponents;
 
+import NOVATechnology.PageObjects.CartPO;
+import NOVATechnology.PageObjects.ProductCataloguePO;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -32,7 +34,9 @@ public class AbstractComponent {
         wait.until(ExpectedConditions.invisibilityOf(element));
     }
 
-    public void goToCartPage(){
+    public CartPO goToCartPage(){
         cartHeader.click();
+        CartPO cartPO = new CartPO(driver);
+        return cartPO;
     }
 }

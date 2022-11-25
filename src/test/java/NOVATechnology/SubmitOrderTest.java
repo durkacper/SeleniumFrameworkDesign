@@ -1,5 +1,6 @@
 package NOVATechnology;
 
+import NOVATechnology.PageObjects.CartPO;
 import NOVATechnology.PageObjects.LandingPagePO;
 import NOVATechnology.PageObjects.ProductCataloguePO;
 import io.github.bonigarcia.wdm.WebDriverManager;
@@ -35,39 +36,29 @@ public class SubmitOrderTest {
         //login
         LandingPagePO landingPage = new LandingPagePO(driver);
         landingPage.goTo();
-        landingPage.loginAplication("john.brown@mail.com", "Password123");
+        ProductCataloguePO productCataloguePO = landingPage.loginAplication("john.brown@mail.com", "Password123");
 
         //wait until products are loaded
         //grab all products into list
-        ProductCataloguePO productCataloguePO = new ProductCataloguePO(driver);
         List<WebElement> products = productCataloguePO.getProductList();
 
         //iterate on list using Streams and add product to cart
         //wait until "Product Added to Cart" notification is displayed (temporary notification), then go to Cart
         //and wait until "loading page animation" disappeared (in this case the "invisibilityOf" is quicker than "invisibilityOfElementLocated")
         productCataloguePO.addProductToCart(productName);
-        //go to the Cart
-        productCataloguePO.goToCartPage();
+        //go to the Cart page
+        CartPO cartPO = productCataloguePO.goToCartPage();
 
-        //grab all products in Cart into list
-        List<WebElement> cartProducts = driver.findElements(By.cssSelector(".cartSection h3"));
-
-        //iterate on list in classic way
-        /*
-        for (int i = 0; i < cartProducts.size(); i++) {
-            String productInCartText = cartProducts.get(i).getText();
-            Assert.assertTrue(productInCartText.equals(productName));
-        }
-         */
-
+        //Cart Page - grab all products in Cart into list
         //iterate on list using Stream
-        boolean match = cartProducts.stream().anyMatch(cartProduct ->
-                cartProduct.getText().equalsIgnoreCase(productName));
-        Assert.assertTrue(match);
-
-
+        //assert if our product is added
         //go to the Checkout
-        driver.findElement(By.cssSelector("li.totalRow button")).click();
+        Boolean match = cartPO.verifyProductDisplayed(productName);
+        Assert.assertTrue(match);
+        cartPO.goToCheckout();
+
+
+
 
 
 

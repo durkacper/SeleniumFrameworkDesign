@@ -28,10 +28,12 @@ public class LandingPagePO extends AbstractComponent {
     WebElement loginButton;
 
     //instead of creating separate methods for each WebElement, we can create one complex method and use it in Test
-    public void loginAplication(String mail, String pass) {
+    public ProductCataloguePO loginAplication(String mail, String pass) {
         userEmail.sendKeys(mail);
         userPasswrod.sendKeys(pass);
         loginButton.click();
+        ProductCataloguePO productCataloguePO = new ProductCataloguePO(driver);
+        return productCataloguePO;
     }
 
     public void goTo() {
