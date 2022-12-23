@@ -1,8 +1,6 @@
 package NOVATechnology;
 
-import NOVATechnology.PageObjects.CartPO;
-import NOVATechnology.PageObjects.LandingPagePO;
-import NOVATechnology.PageObjects.ProductCataloguePO;
+import NOVATechnology.PageObjects.*;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -55,29 +53,16 @@ public class SubmitOrderTest {
         //go to the Checkout
         Boolean match = cartPO.verifyProductDisplayed(productName);
         Assert.assertTrue(match);
-        cartPO.goToCheckout();
-
-
-
-
-
-
-
+        CheckoutPO checkoutPO = cartPO.goToCheckout();
 
         //Checkout -> select the country using Actions
-        Actions actions = new Actions(driver);
-        actions.sendKeys(driver.findElement(By.cssSelector("[placeholder='Select Country']")), "Pol").build().perform();
-        //simple solution, also valid:
-        //driver.findElement(By.cssSelector("[placeholder='Select Country']")).sendKeys("Pol");
-
         //wait until suggestion of country is shown and select Poland
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(".ta-results")));
-        driver.findElement(By.cssSelector("button.ta-item:nth-last-of-type(1)")).click();
-        driver.findElement(By.cssSelector(".action__submit")).click();
+        checkoutPO.selectCountry("Pol");
+        ConfirmationPO confirmationPO = checkoutPO.placeOrder();
 
         //Assert if "THANK YOU" information is displayed
-        String confirmMessage = driver.findElement(By.cssSelector(".hero-primary")).getText();
-        Assert.assertTrue(confirmMessage.equalsIgnoreCase( "Thankyou for the order."));
+        String confirmationMessageText = confirmationPO.getConfirmationText();
+        Assert.assertTrue(confirmationMessageText.equalsIgnoreCase( "Thankyou for the order."));
 
         //close the browser
         driver.close();

@@ -32,8 +32,7 @@ public class LandingPagePO extends AbstractComponent {
         userEmail.sendKeys(mail);
         userPasswrod.sendKeys(pass);
         loginButton.click();
-        ProductCataloguePO productCataloguePO = new ProductCataloguePO(driver);
-        return productCataloguePO;
+        return new ProductCataloguePO(driver);
     }
 
     public void goTo() {

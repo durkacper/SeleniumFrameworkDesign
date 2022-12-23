@@ -14,6 +14,7 @@ public class CartPO extends AbstractComponent {
 
     public CartPO(WebDriver driver) {
         super(driver);
+        this.driver = driver;
         PageFactory.initElements(driver, this);
     }
 
@@ -25,8 +26,7 @@ public class CartPO extends AbstractComponent {
 
     public CheckoutPO goToCheckout() {
         checkoutButton.click();
-        CheckoutPO checkoutPO = new CheckoutPO(driver);
-        return checkoutPO;
+        return new CheckoutPO(driver);
     }
 
     public boolean verifyProductDisplayed(String productName) {
