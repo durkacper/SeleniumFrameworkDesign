@@ -1,6 +1,6 @@
 package NOVATechnology.PageObjects;
 
-import NOVATechnology.AbstractComponents.AbstractComponent;
+import NOVATechnology.AbstractComponents.BasePO;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -9,7 +9,7 @@ import org.openqa.selenium.support.PageFactory;
 
 import java.util.List;
 
-public class ProductCataloguePO extends AbstractComponent {
+public class ProductCataloguePO extends BasePO {
 
     WebDriver driver;
 

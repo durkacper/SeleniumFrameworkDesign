@@ -1,4 +1,4 @@
-package NOVATechnology;
+package NOVATechnologyTests;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.openqa.selenium.By;
