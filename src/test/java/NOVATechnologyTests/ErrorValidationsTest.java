@@ -12,11 +12,25 @@ import java.util.List;
 public class ErrorValidationsTest extends BaseTest {
 
     @Test
-    public void loginFail() throws IOException {
+    public void loginErrorValidation() throws IOException {
 
         landingPagePO.loginApplication("wrong@mail.com", "wrong pass");
         landingPagePO.getErrorMessage();
         Assert.assertEquals("Incorrect email or password.", landingPagePO.getErrorMessage());
+    }
+
+
+    @Test
+    public void productErrorValidation() throws IOException {
+
+        String productName = "ZARA COAT 3";
+
+        ProductCataloguePO productCataloguePO = landingPagePO.loginApplication("tom.cruise@mail.com", "Secret123");
+        List<WebElement> products = productCataloguePO.getProductList();
+        productCataloguePO.addProductToCart(productName);
+        CartPO cartPO = productCataloguePO.goToCartPage();
+        Boolean match = cartPO.verifyProductDisplayed("ZARA COAT 44");
+        Assert.assertFalse(match);
     }
 
 
