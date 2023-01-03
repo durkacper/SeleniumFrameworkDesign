@@ -11,7 +11,7 @@ import java.util.List;
 
 public class ErrorValidationsTest extends BaseTest {
 
-    @Test
+    @Test (groups = {"errorHandling"})
     public void loginErrorValidation() throws IOException {
 
         landingPagePO.loginApplication("wrong@mail.com", "wrong pass");

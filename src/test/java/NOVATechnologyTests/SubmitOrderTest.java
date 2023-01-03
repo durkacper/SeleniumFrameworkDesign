@@ -19,10 +19,11 @@ import java.util.List;
 
 public class SubmitOrderTest extends BaseTest {
 
+    String productName = "ZARA COAT 3";
+
+    //submit order
     @Test
     public void submitOrder() throws IOException {
-
-        String productName = "ZARA COAT 3";
 
         ProductCataloguePO productCataloguePO = landingPagePO.loginApplication("john.brown@mail.com", "Password123");
 
@@ -55,6 +56,17 @@ public class SubmitOrderTest extends BaseTest {
         String confirmationMessageText = confirmationPO.getConfirmationText();
         Assert.assertTrue(confirmationMessageText.equalsIgnoreCase("Thankyou for the order."));
 
+    }
+
+
+    //verify that the ZARA COAT 3 is displayed in the orders page
+    //URGENT -> run this test only if "submitOrder" is executed
+    @Test(dependsOnMethods = {"submitOrder"})
+    public void orderHistory(){
+
+        ProductCataloguePO productCataloguePO = landingPagePO.loginApplication("john.brown@mail.com", "Password123");
+        OrdersPO ordersPO = productCataloguePO.goToOrdersPage();
+        Assert.assertTrue(ordersPO.verifyOrderDisplayed(productName));
     }
 
 

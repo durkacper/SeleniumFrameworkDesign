@@ -1,6 +1,7 @@
 package NOVATechnology.AbstractComponents;
 
 import NOVATechnology.PageObjects.CartPO;
+import NOVATechnology.PageObjects.OrdersPO;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -17,6 +18,9 @@ public class BasePO {
 
     @FindBy(css = "button[routerlink='/dashboard/cart'] i")
     WebElement cartHeader;
+
+    @FindBy(css = "button[routerlink='/dashboard/myorders']")
+    WebElement ordersHeader;
 
     public BasePO(WebDriver driver) {
         this.driver = driver;
@@ -42,5 +46,11 @@ public class BasePO {
         cartHeader.click();
         CartPO cartPO = new CartPO(driver);
         return cartPO;
+    }
+
+    public OrdersPO goToOrdersPage(){
+        ordersHeader.click();
+        OrdersPO ordersPO = new OrdersPO(driver);
+        return ordersPO;
     }
 }
