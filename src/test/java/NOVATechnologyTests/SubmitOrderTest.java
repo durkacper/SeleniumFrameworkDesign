@@ -2,19 +2,13 @@ package NOVATechnologyTests;
 
 import NOVATechnology.PageObjects.*;
 import NOVATechnologyTests.TestComponents.BaseTest;
-import io.github.bonigarcia.wdm.WebDriverManager;
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 import java.io.IOException;
-import java.time.Duration;
+import java.util.HashMap;
 import java.util.List;
 
 public class SubmitOrderTest extends BaseTest {
@@ -22,10 +16,10 @@ public class SubmitOrderTest extends BaseTest {
     String productName = "ZARA COAT 3";
 
     //submit order
-    @Test
-    public void submitOrder() throws IOException {
+    @Test(dataProvider = "getData", groups = {"purchase"})
+    public void submitOrder(HashMap<String, String> input) throws IOException {
 
-        ProductCataloguePO productCataloguePO = landingPagePO.loginApplication("john.brown@mail.com", "Password123");
+        ProductCataloguePO productCataloguePO = landingPagePO.loginApplication(input.get("mail"), input.get("pass"));
 
         //wait until products are loaded
         //grab all products into list
@@ -34,7 +28,7 @@ public class SubmitOrderTest extends BaseTest {
         //iterate on list using Streams and add product to cart
         //wait until "Product Added to Cart" notification is displayed (temporary notification), then go to Cart
         //and wait until "loading page animation" disappeared (in this case the "invisibilityOf" is quicker than "invisibilityOfElementLocated")
-        productCataloguePO.addProductToCart(productName);
+        productCataloguePO.addProductToCart(input.get("productName"));
 
         //go to the Cart page
         CartPO cartPO = productCataloguePO.goToCartPage();
@@ -43,7 +37,7 @@ public class SubmitOrderTest extends BaseTest {
         //iterate on list using Stream
         //assert if our product is added
         //go to the Checkout
-        Boolean match = cartPO.verifyProductDisplayed(productName);
+        Boolean match = cartPO.verifyProductDisplayed(input.get("productName"));
         Assert.assertTrue(match);
         CheckoutPO checkoutPO = cartPO.goToCheckout();
 
@@ -62,13 +56,30 @@ public class SubmitOrderTest extends BaseTest {
     //verify that the ZARA COAT 3 is displayed in the orders page
     //URGENT -> run this test only if "submitOrder" is executed
     @Test(dependsOnMethods = {"submitOrder"})
-    public void orderHistory(){
+    public void orderHistory() {
 
         ProductCataloguePO productCataloguePO = landingPagePO.loginApplication("john.brown@mail.com", "Password123");
         OrdersPO ordersPO = productCataloguePO.goToOrdersPage();
         Assert.assertTrue(ordersPO.verifyOrderDisplayed(productName));
     }
 
+
+    @DataProvider
+    public Object[][] getData() {
+
+        HashMap<String, String> map = new HashMap<String, String>();
+        map.put("mail", "john.brown@mail.com");
+        map.put("pass", "Password123");
+        map.put("productName", "ZARA COAT 3");
+
+        HashMap<String, String> map1 = new HashMap<String, String>();
+        map1.put("mail", "carlos.santana@mail.com");
+        map1.put("pass", "Guitar123");
+        map1.put("productName", "ADIDAS ORIGINAL");
+
+
+        return new Object[][]{{map}, {map1}};
+    }
 
 }
 

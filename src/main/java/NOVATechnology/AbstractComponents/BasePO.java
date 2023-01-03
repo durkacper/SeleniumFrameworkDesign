@@ -16,10 +16,10 @@ public class BasePO {
 
     WebDriver driver;
 
-    @FindBy(css = "button[routerlink='/dashboard/cart'] i")
+    @FindBy(css = "button[routerlink*='cart'] i")
     WebElement cartHeader;
 
-    @FindBy(css = "button[routerlink='/dashboard/myorders']")
+    @FindBy(css = "button[routerlink*='myorders']")
     WebElement ordersHeader;
 
     public BasePO(WebDriver driver) {

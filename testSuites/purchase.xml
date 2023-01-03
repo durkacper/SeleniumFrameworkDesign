@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite parallel="tests" name="Test Suite">
+    <groups>
+        <run>
+            <include name="purchase"/>
+        </run>
+    </groups>
+    <test verbose="5" preserve-order="true" name="Submit Order Test">
+        <classes>
+            <class name="NOVATechnologyTests.SubmitOrderTest"/>
+        </classes>
+    </test>
+    <test verbose="5" preserve-order="true" name="Error Validations Test">
+        <classes>
+            <class name="NOVATechnologyTests.ErrorValidationsTest"/>
+        </classes>
+    </test>
+</suite>
