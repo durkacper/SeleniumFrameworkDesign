@@ -1,7 +1,7 @@
 package NOVATechnologyTests;
 
 import NOVATechnology.PageObjects.*;
-import NOVATechnologyTests.TestComponents.BaseTest;
+import TestComponents.BaseTest;
 import org.openqa.selenium.WebElement;
 import org.testng.Assert;
 import org.testng.annotations.Test;
